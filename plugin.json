@@ -3,7 +3,7 @@
   "name": "NeoSlides",
   "version": "1.2.1",
   "author": "NDesumeur",
-  "description": "Des présentations : diapositives, objets, thèmes, mode diaporama. Ouvre et enregistre les fichiers PowerPoint.",
+  "description": "Des présentations : diapositives à partir de modèles (titre, deux colonnes, citation, chiffres clés…), textes, images et formes à placer à la souris, alignement et ordre des éléments, dix thèmes, transitions et notes de l'orateur. Mode présentation plein écran au clavier, export en PDF ; présentations enregistrées toutes seules et synchronisées entre tes PC.",
   "icon": "icon.png",
   "entry": "index.js",
   "view": "slides",
