@@ -1,9 +1,9 @@
 {
   "pluginId": "neodex.slides",
   "repo": "NDesumeur/neodex-plugin-slides",
-  "version": "1.2.1",
-  "sha256": "c9b08176faeca7e956e2a18ad0126188c197abd7277dd8fd38f4370aa9d0fea2",
-  "approvedAt": "2026-11-06T21:35:48.025Z",
+  "version": "1.2.2",
+  "sha256": "2ee23e70db7575b99c71eecefaca340b1c3aa039e4db9f70b87f6f7287f5a4dd",
+  "approvedAt": "2026-11-08T12:10:50.501Z",
   "neobase": ">=4.0.0",
-  "signature": "TzpBqI6vm49inSBn4CyBHMb2yhgfWf/bvvKMs01+10lsy1FBQraYY04SHo5V4e3JYpGgi9ZKCzZatbLF60uZAQ=="
+  "signature": "JO1r3fbsLPNcELpLls6/BpWJpk0CusfSd5GMNUmO6MWzjeJCvQ56+1kYJbQ6fcWda3Ha+gwQtvy4bayys+hrBg=="
 }
