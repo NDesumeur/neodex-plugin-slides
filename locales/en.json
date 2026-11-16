@@ -32,7 +32,6 @@
  "Depuis le début": "From the beginning",
  "Depuis un fichier…": "From a file…",
  "Depuis un lien…": "From a link…",
- "Des présentations : diapositives à partir de modèles (titre, deux colonnes, citation, chiffres clés…), textes, images et formes à placer à la souris, alignement et ordre des éléments, dix thèmes, transitions et notes de l'orateur. Mode présentation plein écran au clavier, export en PDF ; présentations enregistrées toutes seules et synchronisées entre tes PC.": "Presentations: slides from templates (title, two columns, quote, key figures…), text, images and shapes placed with the mouse, element alignment and order, ten themes, transitions and speaker notes. A keyboard-driven full-screen presentation mode and PDF export; presentations saved automatically and synced between your PCs.",
  "Des questions ?": "Questions?",
  "Deux colonnes": "Two columns",
  "Deuxième point": "Second point",
@@ -132,5 +131,7 @@
  "À gauche": "Left",
  "Étoile": "Star",
  "▶ Présenter": "▶ Present",
- "tbPop ofMenu px on": "TbPop ofMenu px on"
+ "tbPop ofMenu px on": "TbPop ofMenu px on",
+ "Des présentations : diapositives à partir de modèles (titre, deux colonnes, citation, chiffres clés…), textes, images et formes à placer à la souris, alignement et ordre des éléments, dix thèmes, transitions et notes de l'orateur. Mode présentation plein écran au clavier, export en PDF ; présentations enregistrées toutes seules et synchronisées entre tes PC. Export PowerPoint (.pptx) : textes, listes, formes, images, fonds et transitions restent modifiables dans PowerPoint. Colonnes, miniatures et textes selon la taille de l'écran.": "Presentations: slides from templates (title, two columns, quote, key figures…), text, images and shapes placed with the mouse, element alignment and order, ten themes, transitions and speaker notes. A keyboard-driven full-screen presentation mode and PDF export; presentations saved automatically and synced between your PCs. PowerPoint export (.pptx): text, lists, shapes, images, backgrounds and transitions stay editable in PowerPoint. Columns, thumbnails and text sized to the screen.",
+ "PowerPoint (.pptx)…": "PowerPoint (.pptx)…"
 }

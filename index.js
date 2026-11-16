@@ -5,14 +5,14 @@ const HTML = "";
 /*CSS-MOVED*/ const CSS = `.ofMenu .tbtn{justify-content:flex-start;font:14px var(--text);letter-spacing:0}
 .ofDropM .tbtn{justify-content:flex-start;font:14px var(--text);letter-spacing:0}
 .ofApp{display:flex;background:var(--bg0)}
-.ofSide{width:260px;flex:none;display:flex;flex-direction:column;gap:10px;padding:18px 14px;border-right:3px solid var(--line);background:rgba(var(--d8),.6);overflow:hidden}
+.ofSide{width:clamp(200px,14vw,290px);flex:none;display:flex;flex-direction:column;gap:10px;padding:18px 14px;border-right:3px solid var(--line);background:rgba(var(--d8),.6);overflow:hidden}
 .ofSide .row{gap:8px}
-.ofSide .btn{flex:1;padding:8px 6px;font-size:9px}
+.ofSide .btn{flex:1;padding:9px 6px;font-size:11px}
 .ofSearch{padding:7px 10px;font-size:14px}
 .ofList{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px;margin:0 -6px;padding:0 6px}
 .ofItem{all:unset;cursor:var(--cp,pointer);display:flex;flex-direction:column;gap:2px;padding:8px 10px;color:var(--lilac)}
 .ofItem .n{color:#fff;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ofItem .hint{font-size:12px}
+.ofItem .hint{font-size:14px}
 .ofItem:hover{background:rgba(255,255,255,.04)}
 .ofItem.on{background:rgba(var(--mgr),.18);box-shadow:inset 3px 0 0 var(--magenta)}
 .ofBody{flex:1;min-width:0;display:flex;flex-direction:column}
@@ -41,11 +41,11 @@ const HTML = "";
 .ofDrop.on .ofDropM{display:flex}
 .ofDropM .tbtn{padding:8px 10px}
 .ofDropM .tbtn:hover{background:rgba(var(--mgr),.16);color:#fff}
-.ofStatus{padding:6px 16px;font-size:13px;color:var(--muted);border-top:3px solid var(--line)}
+.ofStatus{padding:7px 16px;font-size:15px;color:var(--muted);border-top:3px solid var(--line)}
 .slRow{flex:1;min-height:0;display:flex}
 .slThumbs{width:200px;flex:none;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;border-right:3px solid var(--line)}
 .slThumb{position:relative;cursor:var(--cp,pointer);display:flex;gap:6px}
-.slThumb .n{font-size:12px;color:var(--muted);width:16px}
+.slThumb .n{font-size:14px;color:var(--muted);width:20px}
 .slThumb.on .slMini{box-shadow:0 0 0 3px var(--magenta)}
 .slMini{position:relative;width:960px;height:540px;zoom:.17;overflow:hidden;pointer-events:none;box-shadow:0 0 0 6px var(--line);flex:none}
 .slCenter{flex:1;min-width:0;display:flex;flex-direction:column}
@@ -60,11 +60,13 @@ const HTML = "";
 .slH{position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;background:#fff;box-shadow:0 0 0 2px #e01ec8;z-index:5}
 .slH.nw,.slH.se{cursor:nwse-resize}
 .slH.ne,.slH.sw{cursor:nesw-resize}
-.slNotes{height:70px;margin:8px 10px;resize:vertical;font-size:14px}
+.slNotes{width:auto;align-self:stretch;box-sizing:border-box;height:clamp(64px,9vh,120px);margin:8px 10px;resize:vertical;font-size:15px}
+@media (max-width:1200px){.slThumbs{width:150px;padding:10px 8px}.slMini{zoom:.12}}
+@media (min-width:1700px){.slThumbs{width:250px}.slMini{zoom:.22}}
 .slShow{position:fixed;inset:0;z-index:60;background:#000;cursor:none}
 .slShowStage{position:absolute;left:50%;top:50%;transform-origin:center;box-shadow:none}
 .slShowStage .slEl{cursor:none}
-.slShowN{position:fixed;right:18px;bottom:12px;color:rgba(255,255,255,.4);font:10px var(--title)}
+.slShowN{position:fixed;right:18px;bottom:12px;color:rgba(255,255,255,.4);font:13px var(--title)}
 .slShowStage.tr-fade{animation:slFade .5s ease}
 .slShowStage.tr-zoom{animation:slZoom .45s ease}
 .slShowStage.tr-slide.fwd{animation:slSlide .45s ease}
@@ -148,7 +150,7 @@ async function ofImport(k, test) {
 async function ofExport(k, format, test) {
   const f = k.cur; if (!f) return '';
   try {
-    const p = await window.neo.officeExport({kind: k.kind, name: f.name, format, ...k.toExport(f, format)}, test);
+    const p = await window.neo.officeExport({kind: k.kind, name: f.name, format, ...await k.toExport(f, format)}, test);
     if (p) toast('Exporté : ' + p.split(/[\\/]/).pop());
     return p;
   } catch (e) { toast('Export impossible : ' + e.message.replace(/^.*Error: /, ''), true); return ''; }
@@ -233,10 +235,10 @@ const SL_LAYOUTS = {
   blank: ['Vide', () => []],
 };
 const sl = {kind: 'slides', key: 'neodex:slides', view: 'slidesApp', name: 'NeoSlides', newName: 'Présentation', openHint: 'Ouvrir une présentation NeoSlides (.neoslides)',
-  intro: 'Présentations : diapositives avec textes, images et formes à placer à la souris, thèmes, transitions, notes et mode présentation plein écran. Enregistrées toutes seules et synchronisées entre tes PC ; export en PDF.',
+  intro: 'Présentations : diapositives avec textes, images et formes à placer à la souris, thèmes, transitions, notes et mode présentation plein écran. Enregistrées toutes seules et synchronisées entre tes PC ; export en PDF et en PowerPoint.',
   newData: () => ({theme: 'neo', slides: [{id: slElId(), bg: null, tr: 'fade', notes: '', els: SL_LAYOUTS.title[1]()}]}),
   fromImport: r => r.slides,
-  toExport: (f, format) => format === 'neoslides' ? {slides: f.data} : {html: slPrintHtml(f.data)},
+  toExport: async (f, format) => format === 'neoslides' ? {slides: f.data} : format === 'pptx' ? {base64: slxB64(await slxBuild(f.data))} : {html: slPrintHtml(f.data)},
   idx: 0, selId: null,
 };
 const slTheme = d => SL_THEMES[d.theme] || SL_THEMES.neo;
@@ -267,6 +269,143 @@ function slPrintHtml(d) {
 @page{size:13.333in 7.5in;margin:0}body{margin:0}.slide{position:relative;width:${SL_W}px;height:${SL_H}px;overflow:hidden;zoom:1.3333;page-break-after:always;break-after:page}
 .slEl{position:absolute;overflow:hidden;line-height:1.25;word-wrap:break-word}.slEl img{width:100%;height:100%;object-fit:contain}.slEl ul{margin:0;padding-left:1.2em}.slEl p{margin:0}</style></head><body>${pages}</body></html>`;
 }
+// ---- export PowerPoint (.pptx) : les diapositives deviennent de vraies zones de texte, formes et images modifiables dans PowerPoint ----
+// le .pptx est un zip (rangé sans compression) de fichiers XML ; positions : 1 px du cadre 960 × 540 = 12 700 EMU, une taille de 26 px = 26 pt
+const SLX_EMU = 12700, slxX = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[c]);
+const SLX_NS = 'xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"';
+const SLX_REL = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/', SLX_CT = 'application/vnd.openxmlformats-officedocument.';
+const SLX_HEAD = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n';
+const SLX_GRP = '<p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>';
+const SLX_SHAPES = {ellipse: 'ellipse', tri: 'triangle', arrow: 'rightArrow', star: 'star5', heart: 'heart', diamond: 'diamond', bubble: 'wedgeRoundRectCallout', round: 'roundRect'};
+const slxColor = (() => { let g; return (c, def = '000000') => { g ||= document.createElement('canvas').getContext('2d'); g.fillStyle = '#' + def; g.fillStyle = c || '#' + def; const v = g.fillStyle;
+  if (v[0] === '#') return v.slice(1).toUpperCase(); const m = v.match(/[\d.]+/g); return m ? m.slice(0, 3).map(n => (+n).toString(16).padStart(2, '0')).join('').toUpperCase() : def; }; })();
+const slxFont = f => String(f || 'Calibri').split(',')[0].replace(/["']/g, '').trim();
+function slxFill(bg) {  // un fond CSS (couleur ou dégradé linéaire) en remplissage PowerPoint
+  const cols = String(bg || '').match(/#[0-9a-f]{3,8}\b|rgba?\([^)]*\)/gi) || [];
+  if (/gradient/.test(bg) && cols.length > 1) {
+    const deg = +((String(bg).match(/(-?[\d.]+)deg/) || [])[1] ?? 180), ang = Math.round(((deg - 90) % 360 + 360) % 360 * 60000);
+    return `<a:gradFill rotWithShape="1"><a:gsLst>${cols.map((c, i) => `<a:gs pos="${Math.round(i / (cols.length - 1) * 100000)}"><a:srgbClr val="${slxColor(c)}"/></a:gs>`).join('')}</a:gsLst><a:lin ang="${ang}" scaled="0"/></a:gradFill>`;
+  }
+  return `<a:solidFill><a:srgbClr val="${slxColor(cols[0] || bg, 'FFFFFF')}"/></a:solidFill>`;
+}
+function slxParas(html, base) {  // le HTML d'une zone de texte en paragraphes : listes à puces ou numérotées, gras, italique, souligné, couleur, taille
+  const box = document.createElement('div'); box.innerHTML = html; const paras = []; let cur = null;
+  const para = (list) => { cur = {list, runs: []}; paras.push(cur); };
+  const walk = (n, st, list) => {
+    if (n.nodeType === 3) { if (!n.data.replace(/[\n\r\t]/g, '')) return; if (!cur) para(list); cur.runs.push({t: n.data.replace(/\s+/g, ' '), ...st}); return; }
+    if (n.nodeType !== 1) return;
+    const tag = n.nodeName, s = {...st};
+    if (/^(B|STRONG)$/.test(tag) || +n.style.fontWeight >= 600 || n.style.fontWeight === 'bold') s.b = 1;
+    if (/^(I|EM)$/.test(tag) || n.style.fontStyle === 'italic') s.i = 1;
+    if (tag === 'U' || /underline/.test(n.style.textDecoration)) s.u = 1;
+    if (n.style.color || n.getAttribute('color')) s.color = slxColor(n.style.color || n.getAttribute('color'));
+    if (/px$/.test(n.style.fontSize)) s.size = parseFloat(n.style.fontSize); else if (/pt$/.test(n.style.fontSize)) s.size = parseFloat(n.style.fontSize) * 4 / 3;
+    if (tag === 'BR') { if (!cur) para(list); cur.runs.push({br: 1}); return; }
+    if (tag === 'UL' || tag === 'OL') { for (const c of n.children) if (c.nodeName === 'LI') { para(tag === 'UL' ? 'bu' : 'num'); for (const k of c.childNodes) walk(k, s, list); cur = null; } return; }
+    const block = /^(P|DIV|H\d|LI|BLOCKQUOTE|PRE)$/.test(tag);
+    if (block) { para(list); if (n.style.textAlign) cur.al = n.style.textAlign; }
+    for (const k of n.childNodes) walk(k, s, list);
+    if (block) cur = null;
+  };
+  for (const k of box.childNodes) walk(k, {}, null);
+  if (!paras.length) para(null);
+  const algn = a => ({center: 'ctr', right: 'r', justify: 'just'})[a] || 'l';
+  const rpr = (r, tag = 'a:rPr') => `<${tag} lang="fr-FR" sz="${Math.round((r.size || base.size) * 100)}"${r.b ? ' b="1"' : ''}${r.i ? ' i="1"' : ''}${r.u ? ' u="sng"' : ''} dirty="0"><a:solidFill><a:srgbClr val="${r.color || base.color}"/></a:solidFill><a:latin typeface="${slxX(base.font)}"/></${tag}>`;
+  return paras.map(p => {
+    const bu = p.list === 'bu' ? '<a:buFont typeface="Arial"/><a:buChar char="•"/>' : p.list === 'num' ? '<a:buFont typeface="+mj-lt"/><a:buAutoNum type="arabicPeriod"/>' : '<a:buNone/>';
+    const ind = p.list ? ` marL="${Math.round(base.size * 1.2 * SLX_EMU)}" indent="-${Math.round(base.size * 1.2 * SLX_EMU)}"` : '';
+    const runs = p.runs.map(r => r.br ? `<a:br>${rpr(base)}</a:br>` : `<a:r>${rpr(r)}<a:t>${slxX(r.t)}</a:t></a:r>`).join('');
+    return `<a:p><a:pPr algn="${algn(p.al || base.al)}"${ind}><a:lnSpc><a:spcPct val="105000"/></a:lnSpc>${bu}</a:pPr>${runs}${rpr(base, 'a:endParaRPr')}</a:p>`;
+  }).join('');
+}
+async function slxImage(src) {  // PNG ou JPEG tels quels, le reste redessiné en PNG ; null si l'image ne se lit pas (lien bloqué…)
+  try {
+    const img = new Image(); img.src = src; await img.decode();
+    const m = String(src).match(/^data:image\/(png|jpeg);base64,(.*)$/);
+    if (m) return {ext: m[1], b64: m[2], w: img.naturalWidth, h: img.naturalHeight};
+    const c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight; c.getContext('2d').drawImage(img, 0, 0);
+    return {ext: 'png', b64: c.toDataURL('image/png').split(',')[1], w: img.naturalWidth, h: img.naturalHeight};
+  } catch { return null; }
+}
+const SLX_CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+const slxCrc = u => { let c = 0xFFFFFFFF; for (let i = 0; i < u.length; i++) c = SLX_CRC[(c ^ u[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+function slxZip(files) {  // [[nom, Uint8Array]] → un zip sans compression
+  const parts = [], central = []; let off = 0;
+  for (const [name, data] of files) {
+    const nm = new TextEncoder().encode(name), crc = slxCrc(data), h = new DataView(new ArrayBuffer(30));
+    [[0, 0x04034b50, 4], [4, 20, 2], [6, 0x0800, 2], [8, 0, 2], [10, 0, 2], [12, 0x21, 2], [14, crc, 4], [18, data.length, 4], [22, data.length, 4], [26, nm.length, 2], [28, 0, 2]].forEach(([o, v, n]) => n === 4 ? h.setUint32(o, v, true) : h.setUint16(o, v, true));
+    const c = new DataView(new ArrayBuffer(46));
+    [[0, 0x02014b50, 4], [4, 20, 2], [6, 20, 2], [8, 0x0800, 2], [10, 0, 2], [12, 0, 2], [14, 0x21, 2], [16, crc, 4], [20, data.length, 4], [24, data.length, 4], [28, nm.length, 2], [30, 0, 2], [32, 0, 2], [34, 0, 2], [36, 0, 2], [38, 0, 4], [42, off, 4]].forEach(([o, v, n]) => n === 4 ? c.setUint32(o, v, true) : c.setUint16(o, v, true));
+    parts.push(new Uint8Array(h.buffer), nm, data); central.push(new Uint8Array(c.buffer), nm); off += 30 + nm.length + data.length;
+  }
+  const size = central.reduce((a, u) => a + u.length, 0), e = new DataView(new ArrayBuffer(22));
+  [[0, 0x06054b50, 4], [4, 0, 2], [6, 0, 2], [8, files.length, 2], [10, files.length, 2], [12, size, 4], [16, off, 4], [20, 0, 2]].forEach(([o, v, n]) => n === 4 ? e.setUint32(o, v, true) : e.setUint16(o, v, true));
+  const all = [...parts, ...central, new Uint8Array(e.buffer)], out = new Uint8Array(all.reduce((a, u) => a + u.length, 0)); let p = 0; for (const u of all) { out.set(u, p); p += u.length; }
+  return out;
+}
+async function slxBuild(d) {  // → les octets du .pptx
+  const th = slTheme(d), enc = s => new TextEncoder().encode(SLX_HEAD + s), files = [], media = [], E = v => Math.round(v * SLX_EMU);
+  const b64u = b => Uint8Array.from(atob(b), c => c.charCodeAt(0));
+  const slides = [];
+  for (const [si, s] of d.slides.entries()) {
+    const rels = [`<Relationship Id="rId1" Type="${SLX_REL}slideLayout" Target="../slideLayouts/slideLayout1.xml"/>`]; let id = 2; const shapes = [];
+    for (const e of s.els) {
+      const xf = (x, y, w, h) => `<a:xfrm><a:off x="${E(x)}" y="${E(y)}"/><a:ext cx="${Math.max(1, E(w))}" cy="${Math.max(1, E(h))}"/></a:xfrm>`, n = id++;
+      if (e.t === 'text') {
+        const title = e.role === 'title', base = {size: title ? e.size * th.tscale : e.size, color: slxColor(e.color || (title ? th.title : th.text)), font: slxFont(title ? th.tfont : th.font), al: e.al || 'left'};
+        shapes.push(`<p:sp><p:nvSpPr><p:cNvPr id="${n}" name="Texte ${n}"/><p:cNvSpPr txBox="1"/><p:nvPr/></p:nvSpPr><p:spPr>${xf(e.x, e.y, e.w, e.h)}<a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/></p:spPr><p:txBody><a:bodyPr wrap="square" lIns="0" tIns="0" rIns="0" bIns="0" rtlCol="0" anchor="t"><a:noAutofit/></a:bodyPr><a:lstStyle/>${slxParas(e.html || '', base)}</p:txBody></p:sp>`);
+      } else if (e.t === 'img') {
+        const im = await slxImage(e.src); if (!im) continue;
+        const k = media.length + 1, name = `image${k}.${im.ext}`; media.push([name, b64u(im.b64)]); rels.push(`<Relationship Id="rId${n}" Type="${SLX_REL}image" Target="../media/${name}"/>`);
+        const r = Math.min(e.w / im.w, e.h / im.h) || 1, w = im.w * r, h = im.h * r;  // « contain », comme à l'écran
+        shapes.push(`<p:pic><p:nvPicPr><p:cNvPr id="${n}" name="Image ${n}"/><p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/></p:nvPicPr><p:blipFill><a:blip r:embed="rId${n}"/><a:stretch><a:fillRect/></a:stretch></p:blipFill><p:spPr>${xf(e.x + (e.w - w) / 2, e.y + (e.h - h) / 2, w, h)}<a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr></p:pic>`);
+      } else {
+        shapes.push(`<p:sp><p:nvSpPr><p:cNvPr id="${n}" name="Forme ${n}"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr><p:spPr>${xf(e.x, e.y, e.w, e.h)}<a:prstGeom prst="${SLX_SHAPES[e.shape] || 'rect'}"><a:avLst/></a:prstGeom><a:solidFill><a:srgbClr val="${slxColor(e.fill || th.accent)}"/></a:solidFill><a:ln><a:noFill/></a:ln></p:spPr></p:sp>`);
+      }
+    }
+    const tr = s.tr === 'fade' ? '<p:transition spd="med"><p:fade/></p:transition>' : s.tr === 'slide' ? '<p:transition spd="med"><p:push dir="l"/></p:transition>' : s.tr === 'zoom' ? '<p:transition spd="med"><p:zoom/></p:transition>' : '';
+    files.push([`ppt/slides/slide${si + 1}.xml`, enc(`<p:sld ${SLX_NS}><p:cSld><p:bg><p:bgPr>${slxFill(s.bg || th.bg)}<a:effectLst/></p:bgPr></p:bg><p:spTree>${SLX_GRP}${shapes.join('')}</p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr>${tr}</p:sld>`)]);
+    files.push([`ppt/slides/_rels/slide${si + 1}.xml.rels`, enc(`<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${rels.join('')}</Relationships>`)]);
+    slides.push(si + 1);
+  }
+  const clr = (n, v) => `<a:${n}><a:srgbClr val="${v}"/></a:${n}>`, font = slxFont(th.font), ph = '<a:solidFill><a:schemeClr val="phClr"/></a:solidFill>';
+  const theme = `<a:theme xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" name="NeoSlides"><a:themeElements><a:clrScheme name="NeoSlides">${clr('dk1', '000000')}${clr('lt1', 'FFFFFF')}${clr('dk2', slxColor(th.text))}${clr('lt2', 'EEEEEE')}${clr('accent1', slxColor(th.accent))}${clr('accent2', slxColor(th.title))}${clr('accent3', '5FD08A')}${clr('accent4', '4F9FE0')}${clr('accent5', 'FFD07A')}${clr('accent6', 'FF4F6D')}${clr('hlink', '6A2BD8')}${clr('folHlink', '8A5CF0')}</a:clrScheme>`
+    + `<a:fontScheme name="NeoSlides"><a:majorFont><a:latin typeface="${slxX(slxFont(th.tfont))}"/><a:ea typeface=""/><a:cs typeface=""/></a:majorFont><a:minorFont><a:latin typeface="${slxX(font)}"/><a:ea typeface=""/><a:cs typeface=""/></a:minorFont></a:fontScheme>`
+    + `<a:fmtScheme name="NeoSlides"><a:fillStyleLst>${ph.repeat(3)}</a:fillStyleLst><a:lnStyleLst>${`<a:ln w="6350">${ph}</a:ln>`.repeat(3)}</a:lnStyleLst><a:effectStyleLst>${'<a:effectStyle><a:effectLst/></a:effectStyle>'.repeat(3)}</a:effectStyleLst><a:bgFillStyleLst>${ph.repeat(3)}</a:bgFillStyleLst></a:fmtScheme></a:themeElements><a:objectDefaults/><a:extraClrSchemeLst/></a:theme>`;
+  const R = (id, type, target) => `<Relationship Id="${id}" Type="${SLX_REL}${type}" Target="${target}"/>`, rels = x => `<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${x}</Relationships>`;
+  const exts = [...new Set(media.map(([n]) => n.split('.').pop()))];
+  return slxZip([
+    ['[Content_Types].xml', enc(`<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>${exts.map(x => `<Default Extension="${x}" ContentType="image/${x}"/>`).join('')}`
+      + `<Override PartName="/ppt/presentation.xml" ContentType="${SLX_CT}presentationml.presentation.main+xml"/><Override PartName="/ppt/slideMasters/slideMaster1.xml" ContentType="${SLX_CT}presentationml.slideMaster+xml"/><Override PartName="/ppt/slideLayouts/slideLayout1.xml" ContentType="${SLX_CT}presentationml.slideLayout+xml"/><Override PartName="/ppt/theme/theme1.xml" ContentType="${SLX_CT}theme+xml"/>`
+      + slides.map(i => `<Override PartName="/ppt/slides/slide${i}.xml" ContentType="${SLX_CT}presentationml.slide+xml"/>`).join('') + '</Types>')],
+    ['_rels/.rels', enc(rels(R('rId1', 'officeDocument', 'ppt/presentation.xml')))],
+    ['ppt/presentation.xml', enc(`<p:presentation ${SLX_NS} saveSubsetFonts="1"><p:sldMasterIdLst><p:sldMasterId id="2147483648" r:id="rId1"/></p:sldMasterIdLst><p:sldIdLst>${slides.map(i => `<p:sldId id="${255 + i}" r:id="rId${i + 2}"/>`).join('')}</p:sldIdLst><p:sldSz cx="12192000" cy="6858000"/><p:notesSz cx="6858000" cy="9144000"/></p:presentation>`)],
+    ['ppt/_rels/presentation.xml.rels', enc(rels(R('rId1', 'slideMaster', 'slideMasters/slideMaster1.xml') + R('rId2', 'theme', 'theme/theme1.xml') + slides.map(i => R('rId' + (i + 2), 'slide', `slides/slide${i}.xml`)).join('')))],
+    ['ppt/slideMasters/slideMaster1.xml', enc(`<p:sldMaster ${SLX_NS}><p:cSld><p:bg><p:bgRef idx="1001"><a:schemeClr val="bg1"/></p:bgRef></p:bg><p:spTree>${SLX_GRP}</p:spTree></p:cSld><p:clrMap bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/><p:sldLayoutIdLst><p:sldLayoutId id="2147483649" r:id="rId1"/></p:sldLayoutIdLst><p:txStyles><p:titleStyle/><p:bodyStyle/><p:otherStyle/></p:txStyles></p:sldMaster>`)],
+    ['ppt/slideMasters/_rels/slideMaster1.xml.rels', enc(rels(R('rId1', 'slideLayout', '../slideLayouts/slideLayout1.xml') + R('rId2', 'theme', '../theme/theme1.xml')))],
+    ['ppt/slideLayouts/slideLayout1.xml', enc(`<p:sldLayout ${SLX_NS} type="blank" preserve="1"><p:cSld name="Vide"><p:spTree>${SLX_GRP}</p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sldLayout>`)],
+    ['ppt/slideLayouts/_rels/slideLayout1.xml.rels', enc(rels(R('rId1', 'slideMaster', '../slideMasters/slideMaster1.xml')))],
+    ['ppt/theme/theme1.xml', enc(theme)],
+    ...files, ...media.map(([n, u]) => ['ppt/media/' + n, u]),
+  ]);
+}
+function slxB64(u) { let s = ''; for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode(...u.subarray(i, i + 0x8000)); return btoa(s); }
+function slxRead(u) {  // relit un zip sans compression : [[nom, octets, crc lu]] (pour la vérification)
+  const v = new DataView(u.buffer, u.byteOffset, u.byteLength), out = []; let p = 0;
+  while (p + 30 <= u.length && v.getUint32(p, true) === 0x04034b50) { const n = v.getUint32(p + 18, true), l = v.getUint16(p + 26, true), name = new TextDecoder().decode(u.subarray(p + 30, p + 30 + l)), data = u.subarray(p + 30 + l, p + 30 + l + n); out.push([name, data, v.getUint32(p + 14, true)]); p += 30 + l + n; }
+  return out;
+}
+async function slxCheck() {  // vérification : un diaporama de chaque sorte d'élément → zip relisible, CRC justes, chaque XML bien formé, les bonnes pièces
+  const bad = [], c = document.createElement('canvas'); c.width = 4; c.height = 2; c.getContext('2d').fillRect(0, 0, 2, 2);
+  const d = {theme: 'neo', slides: [{bg: null, tr: 'fade', els: [slText(80, 170, 800, 120, 'Titre <b>gras</b> & « guillemets »', 56, 'title', 'center'), slText(60, 150, 400, 340, '<ul><li>Un</li><li><i>Deux</i><br>suite</li></ul><ol><li>A</li></ol>', 24),
+    {t: 'shape', shape: 'star', x: 500, y: 150, w: 200, h: 200}, {t: 'img', src: c.toDataURL('image/webp'), x: 700, y: 300, w: 200, h: 200}]}, {bg: '#ffffff', tr: 'none', els: []}]};
+  const z = slxRead(await slxBuild(d)), names = z.map(f => f[0]);
+  for (const need of ['[Content_Types].xml', '_rels/.rels', 'ppt/presentation.xml', 'ppt/slides/slide1.xml', 'ppt/slides/slide2.xml', 'ppt/theme/theme1.xml', 'ppt/media/image1.png']) if (!names.includes(need)) bad.push('manque ' + need);
+  for (const [n, u, crc] of z) { if (slxCrc(u) !== crc) bad.push('crc ' + n); if (/\.(xml|rels)$/.test(n) && new DOMParser().parseFromString(new TextDecoder().decode(u), 'application/xml').querySelector('parsererror')) bad.push('xml ' + n); }
+  const s1 = new TextDecoder().decode(z.find(f => f[0] === 'ppt/slides/slide1.xml')[1]);
+  if (!/prst="star5"/.test(s1) || !/buAutoNum/.test(s1) || !/buChar/.test(s1) || !/b="1"/.test(s1) || !/gradFill/.test(s1) || !/&amp; « guillemets »/.test(s1)) bad.push('contenu de la diapositive');
+  console.assert(!bad.length, 'slides pptx', bad); return bad.join(' | ') || 'ok';
+}
 sl.mount = main => {
   const title = el('input', 'f ofTitle'), bar = el('div', 'ofBar'), row = el('div', 'slRow'), thumbs = el('div', 'slThumbs'), center = el('div', 'slCenter'), stageW = el('div', 'slStageW'), stage = el('div', 'slStage'), notes = el('textarea', 'f slNotes'), status = el('div', 'ofStatus');
   title.spellcheck = false; title.placeholder = 'Nom de la présentation'; notes.placeholder = 'Notes de l\'orateur pour cette diapositive (visibles seulement ici)';
@@ -294,7 +433,7 @@ sl.mount = main => {
     ofDrop('Ordre', [['Premier plan', () => slOrder(1)], ['Arrière-plan', () => slOrder(-1)]], 'Ordre de l\'élément sélectionné'), el('i', 'ofSep'),
     theme, bg, ofBtn('⌀', 'Fond du thème', () => { slCur().bg = null; slSaved(); }), tr, el('i', 'ofSep'),
     ofDrop('▶ Présenter', [['Depuis le début', () => slPresent(0)], ['Depuis cette diapositive', () => slPresent(sl.idx)]], 'Mode présentation'),
-    ofDrop('Exporter', [['PDF…', () => ofExport(sl, 'pdf')], ['Fichier NeoSlides…', () => ofExport(sl, 'neoslides')]]), imgIn);
+    ofDrop('Exporter', [['PDF…', () => ofExport(sl, 'pdf')], ['PowerPoint (.pptx)…', () => ofExport(sl, 'pptx')], ['Fichier NeoSlides…', () => ofExport(sl, 'neoslides')]]), imgIn);
   stageW.append(stage); center.append(stageW, notes); row.append(thumbs, center);
   main.append(title, bar, row, status);
   Object.assign(sl, {title, thumbs, stage, stageW, notes, status, theme, tr, bg, color});
@@ -423,7 +562,8 @@ function slPresent(from) {
 }
 sl.open = f => { sl.cur = f; sl.idx = 0; sl.selId = null; sl.title.value = f.name; slRender(true); setTimeout(slFit, 20); };
 sl.close = () => { sl.cur = null; };
-sl.icon = __icon('slides'); ofRegister(sl);  // (non indenté : les textes sur plusieurs lignes restent exactement les tiens)
+sl.icon = __icon('slides'); ofRegister(sl);
+$(sl.view).__slx = test => ofExport(sl, 'pptx', test); slxCheck().then(r => { $(sl.view).dataset.pptx = r; }, e => { $(sl.view).dataset.pptx = 'erreur : ' + e.message; });  // (non indenté : les textes sur plusieurs lignes restent exactement les tiens)
   // ---- fin ----
   ctx.onOpen(() => { ofOpen('slides'); });
 }
