@@ -133,5 +133,10 @@
  "▶ Présenter": "▶ Present",
  "tbPop ofMenu px on": "TbPop ofMenu px on",
  "Des présentations : diapositives à partir de modèles (titre, deux colonnes, citation, chiffres clés…), textes, images et formes à placer à la souris, alignement et ordre des éléments, dix thèmes, transitions et notes de l'orateur. Mode présentation plein écran au clavier, export en PDF ; présentations enregistrées toutes seules et synchronisées entre tes PC. Export PowerPoint (.pptx) : textes, listes, formes, images, fonds et transitions restent modifiables dans PowerPoint. Colonnes, miniatures et textes selon la taille de l'écran.": "Presentations: slides from templates (title, two columns, quote, key figures…), text, images and shapes placed with the mouse, element alignment and order, ten themes, transitions and speaker notes. A keyboard-driven full-screen presentation mode and PDF export; presentations saved automatically and synced between your PCs. PowerPoint export (.pptx): text, lists, shapes, images, backgrounds and transitions stay editable in PowerPoint. Columns, thumbnails and text sized to the screen.",
- "PowerPoint (.pptx)…": "PowerPoint (.pptx)…"
+ "PowerPoint (.pptx)…": "PowerPoint (.pptx)…",
+ "Présentations : diapositives avec textes, images et formes à placer à la souris, thèmes, transitions, notes et mode présentation plein écran. Enregistrées toutes seules et synchronisées entre tes PC ; export en PDF et en PowerPoint.": "Presentations: slides with text, images and shapes to place with the mouse, themes, transitions, notes and full-screen presentation mode. Saved automatically and synced between your PCs; export to PDF and PowerPoint.",
+ "Calibri": "Calibri",
+ "Un": "One",
+ "Deux": "Two",
+ "contenu de la diapositive": "slide content"
 }
