@@ -59,4 +59,4 @@ Building a plugin: see the [NeoDex SDK](https://github.com/NDesumeur/neodex-sdk)
 
 ## PowerPoint export
 
-Export → **PowerPoint (.pptx)** writes a presentation that opens in PowerPoint, Keynote or Google Slides: every text box (bold, italic, underline, colours, bulleted and numbered lists), shape and image stays an editable element, with each slide's background (colour or gradient) and transition (fade, push, zoom). Speaker notes are not included. Needs NeoDex 3.1.16 or newer.
+Export → **PowerPoint (.pptx)** writes a presentation that opens in PowerPoint, Keynote or Google Slides: every text box (bold, italic, underline, colours, bulleted and numbered lists), shape and image stays an editable element, with each slide's background (colour or gradient) and transition (fade, push, zoom). Speaker notes are not included. Needs NeoDex 3.1.17 or newer.

@@ -59,4 +59,4 @@ Développer un plugin : voir le [SDK NeoDex](https://github.com/NDesumeur/neodex
 
 ## Export PowerPoint
 
-Exporter → **PowerPoint (.pptx)** écrit une présentation qui s'ouvre dans PowerPoint, Keynote ou Google Slides : chaque zone de texte (gras, italique, souligné, couleurs, listes à puces et numérotées), chaque forme et chaque image reste un élément modifiable, avec le fond (couleur ou dégradé) et la transition (fondu, glissement, zoom) de chaque diapositive. Les notes de l'orateur ne sont pas reprises. Demande NeoDex 3.1.16 ou plus récent.
+Exporter → **PowerPoint (.pptx)** écrit une présentation qui s'ouvre dans PowerPoint, Keynote ou Google Slides : chaque zone de texte (gras, italique, souligné, couleurs, listes à puces et numérotées), chaque forme et chaque image reste un élément modifiable, avec le fond (couleur ou dégradé) et la transition (fondu, glissement, zoom) de chaque diapositive. Les notes de l'orateur ne sont pas reprises. Demande NeoDex 3.1.17 ou plus récent.
