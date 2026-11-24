@@ -66,6 +66,12 @@ const HTML = "";
 .slShow{position:fixed;inset:0;z-index:60;background:#000;cursor:none}
 .slShowStage{position:absolute;left:50%;top:50%;transform-origin:center;box-shadow:none}
 .slShowStage .slEl{cursor:none}
+.slShow.pres{cursor:default;background:#111}.slShow.pres .slShowStage .slEl{cursor:default}
+.slPresSide{display:none;position:fixed;right:0;top:0;bottom:0;width:34%;padding:16px 20px;box-sizing:border-box;flex-direction:column;gap:8px;overflow:hidden;color:#eee}
+.slShow.pres .slPresSide{display:flex}.slPresNext{transform-origin:0 0;flex:none;pointer-events:none}.slPresEnd{display:grid;place-items:center;height:100%;background:#222;color:#aaa;font:40px var(--title)}
+.slPresL{font:13px/1.5 var(--title);color:#999;text-transform:uppercase;letter-spacing:.05em}.slPresClock{font:28px var(--title);color:#fff;white-space:pre}
+.slPresNotes{flex:1;overflow:auto;font:20px/1.45 'Segoe UI',Arial,sans-serif;white-space:pre-wrap;color:#f2f2f2}
+.slLaser{position:fixed;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:#ff2a2a;box-shadow:0 0 12px 4px rgba(255,40,40,.7);pointer-events:none;z-index:61}
 .slShowN{position:fixed;right:18px;bottom:12px;color:rgba(255,255,255,.4);font:13px var(--title)}
 .slShowStage.tr-fade{animation:slFade .5s ease}
 .slShowStage.tr-zoom{animation:slZoom .45s ease}
@@ -432,7 +438,7 @@ sl.mount = main => {
     ofDrop('Placer', [['Centrer horizontalement', () => slPlaceEl('h')], ['Centrer verticalement', () => slPlaceEl('v')], ['Aligner en haut', () => slPlaceEl('top')], ['Aligner en bas', () => slPlaceEl('bottom')], ['Aligner à gauche', () => slPlaceEl('left')], ['Aligner à droite', () => slPlaceEl('right')]], 'Placer l\'élément sélectionné sur la diapositive'),
     ofDrop('Ordre', [['Premier plan', () => slOrder(1)], ['Arrière-plan', () => slOrder(-1)]], 'Ordre de l\'élément sélectionné'), el('i', 'ofSep'),
     theme, bg, ofBtn('⌀', 'Fond du thème', () => { slCur().bg = null; slSaved(); }), tr, el('i', 'ofSep'),
-    ofDrop('▶ Présenter', [['Depuis le début', () => slPresent(0)], ['Depuis cette diapositive', () => slPresent(sl.idx)]], 'Mode présentation'),
+    ofDrop('▶ Présenter', [['Depuis le début', () => slPresent(0)], ['Depuis cette diapositive', () => slPresent(sl.idx)], ['Vue présentateur (notes, chrono)', () => slPresent(sl.idx, true)]], 'Mode présentation'),
     ofDrop('Exporter', [['PDF…', () => ofExport(sl, 'pdf')], ['PowerPoint (.pptx)…', () => ofExport(sl, 'pptx')], ['Fichier NeoSlides…', () => ofExport(sl, 'neoslides')]]), imgIn);
   stageW.append(stage); center.append(stageW, notes); row.append(thumbs, center);
   main.append(title, bar, row, status);
@@ -543,27 +549,45 @@ function slRender(all) {
   void all;
 }
 // presentation: the whole NeoDex window, one slide at a time
-function slPresent(from) {
+// P : la vue présentateur (diapo en cours, la suivante, les notes, le chronomètre, l'heure) ; L : le pointeur laser
+// shortcut: tout tient dans la fenêtre de NeoDex ; la vue présentateur sur un deuxième écran demande une fenêtre à part, que le bac à sable des plugins n'ouvre pas
+function slPresent(from, presenter = false) {
   const d = sl.cur.data, ov = el('div', 'slShow'), box = el('div', 'slStage slShowStage'), count = el('div', 'slShowN');
-  let i = from;
-  const fit = () => { const s = Math.min(innerWidth / SL_W, innerHeight / SL_H); box.style.transform = `translate(-50%,-50%) scale(${s})`; };
+  const side = el('div', 'slPresSide'), next = el('div', 'slStage slPresNext'), nextL = el('div', 'slPresL', 'Diapositive suivante'), notes = el('div', 'slPresNotes'), clock = el('div', 'slPresClock'), help = el('div', 'slPresL', 'P : vue présentateur · L : laser · R : remettre le chrono à zéro · Échap : quitter');
+  const laser = el('div', 'slLaser'); let i = from, t0 = Date.now(), laserOn = false, pres = presenter;
+  side.append(clock, nextL, next, el('div', 'slPresL', 'Notes'), notes, help);
+  const mmss = ms => { const s = Math.floor(ms / 1000); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); };
+  const tick = () => { clock.textContent = '⏱ ' + mmss(Date.now() - t0) + '   ' + new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'}); };
+  const timer = setInterval(tick, 500);
+  const fit = () => {
+    ov.classList.toggle('pres', pres);
+    if (!pres) { const s = Math.min(innerWidth / SL_W, innerHeight / SL_H); box.style.left = '50%'; box.style.top = '50%'; box.style.transform = `translate(-50%,-50%) scale(${s})`; return; }
+    const w = innerWidth * .64, s = Math.min((w - 40) / SL_W, (innerHeight - 40) / SL_H); box.style.left = w / 2 + 'px'; box.style.top = '50%'; box.style.transform = `translate(-50%,-50%) scale(${s})`;
+    const sw = side.clientWidth - 44; next.style.transform = `scale(${sw / SL_W})`; next.parentNode && (next.style.marginBottom = (SL_H * sw / SL_W - SL_H) + 'px');
+  };
   const show = (n, dir = 1) => {
     if (n < 0 || n >= d.slides.length) { if (n >= d.slides.length) end(); return; }
     i = n; const s = d.slides[i]; slDraw(s, d, box, false);
     box.className = 'slStage slShowStage'; void box.offsetWidth; if (s.tr && s.tr !== 'none') box.classList.add('tr-' + s.tr, dir < 0 ? 'back' : 'fwd');
     count.textContent = (i + 1) + ' / ' + d.slides.length;
+    if (d.slides[i + 1]) slDraw(d.slides[i + 1], d, next, false); else next.replaceChildren(Object.assign(el('div', 'slPresEnd', 'Fin de la présentation'), {}));
+    notes.textContent = s.notes?.trim() || '(pas de notes pour cette diapositive)';
   };
-  const key = e => { e.preventDefault(); if (['ArrowRight', 'ArrowDown', ' ', 'PageDown', 'Enter'].includes(e.key)) show(i + 1); else if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].includes(e.key)) show(i - 1, -1); else if (e.key === 'Home') show(0); else if (e.key === 'End') show(d.slides.length - 1); else if (e.key === 'Escape') end(); };
-  const end = () => { removeEventListener('keydown', key, true); removeEventListener('resize', fit); ov.remove(); sl.idx = i; slRender(true); };
-  ov.append(box, count); document.body.append(ov);
-  ov.onclick = e => show(e.clientX < innerWidth / 4 ? i - 1 : i + 1, e.clientX < innerWidth / 4 ? -1 : 1);
+  const key = e => { e.preventDefault(); const k = e.key.toLowerCase();
+    if (['ArrowRight', 'ArrowDown', ' ', 'PageDown', 'Enter'].includes(e.key)) show(i + 1); else if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].includes(e.key)) show(i - 1, -1); else if (e.key === 'Home') show(0); else if (e.key === 'End') show(d.slides.length - 1); else if (e.key === 'Escape') end();
+    else if (k === 'p') { pres = !pres; fit(); } else if (k === 'l') { laserOn = !laserOn; laser.style.display = laserOn ? '' : 'none'; } else if (k === 'r') { t0 = Date.now(); tick(); } };
+  const end = () => { clearInterval(timer); removeEventListener('keydown', key, true); removeEventListener('resize', fit); ov.remove(); sl.idx = i; slRender(true); };
+  laser.style.display = 'none'; ov.append(box, side, count, laser); document.body.append(ov);
+  ov.onpointermove = e => { if (laserOn) { laser.style.left = e.clientX + 'px'; laser.style.top = e.clientY + 'px'; } };
+  ov.onclick = e => { if (side.contains(e.target)) return; show(e.clientX < innerWidth / 4 ? i - 1 : i + 1, e.clientX < innerWidth / 4 ? -1 : 1); };
   addEventListener('keydown', key, true); addEventListener('resize', fit);
-  fit(); show(i); window.neo?.win('focus');
+  fit(); show(i); tick(); requestAnimationFrame(fit); Promise.resolve().then(() => window.neo?.win('focus')).catch(() => {});  // refusé aux plugins : sans gravité
+  return {get i() { return i; }, get pres() { return pres; }, key: k => key({key: k, preventDefault() {}}), notes, next, clock};
 }
 sl.open = f => { sl.cur = f; sl.idx = 0; sl.selId = null; sl.title.value = f.name; slRender(true); setTimeout(slFit, 20); };
 sl.close = () => { sl.cur = null; };
 sl.icon = __icon('slides'); ofRegister(sl);
-$(sl.view).__slx = test => ofExport(sl, 'pptx', test); slxCheck().then(r => { $(sl.view).dataset.pptx = r; }, e => { $(sl.view).dataset.pptx = 'erreur : ' + e.message; });  // (non indenté : les textes sur plusieurs lignes restent exactement les tiens)
+$(sl.view).__present = slPresent; $(sl.view).__slx = test => ofExport(sl, 'pptx', test); slxCheck().then(r => { $(sl.view).dataset.pptx = r; }, e => { $(sl.view).dataset.pptx = 'erreur : ' + e.message; });  // (non indenté : les textes sur plusieurs lignes restent exactement les tiens)
   // ---- fin ----
   ctx.onOpen(() => { ofOpen('slides'); });
 }

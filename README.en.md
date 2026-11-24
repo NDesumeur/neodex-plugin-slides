@@ -4,6 +4,10 @@ A presentation program: slides with text, images and shapes placed with the mous
 
 *Version française : [README.md](README.md)*
 
+## Presenter view (new in 1.4.0)
+
+Presenter view (P or ▶ Present): current slide, next one, notes in large type, timer and clock; laser pointer (L).
+
 ## Your presentations
 
 - **+ New** creates a presentation, saved automatically on every change.
@@ -41,6 +45,8 @@ Ten colour and font themes: Neon, White, Night, Dawn, Ocean, Forest, Pink, Mono,
 - a click on the left quarter of the screen goes back;
 - previous: **←**, **↑**, **Page Up** or **Backspace**;
 - **Home** and **End**: first and last slide;
+- **P**: the **presenter view** (also in ▶ Present): the current slide, the next one, your notes in large type, the timer and the clock. **R** resets the timer.
+- **L**: the **laser pointer**, a red dot that follows the mouse.
 - **Escape**: exit.
 
 ## Export

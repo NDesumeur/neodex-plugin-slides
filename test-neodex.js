@@ -17,5 +17,13 @@ module.exports = async ({ pj, sleep }) => {
   const r = await pj(`(() => { const s = document.querySelector('.slStage').getBoundingClientRect(), w = document.querySelector('.slStageW').getBoundingClientRect();
     return { w: Math.round(s.width), fits: s.right <= w.right + 1 && s.bottom <= w.bottom + 1, over: [...document.querySelectorAll('.ofApp *')].filter(e => e.offsetParent && !e.closest('.slStage') && e.getBoundingClientRect().right > innerWidth + 1).map(e => e.tagName + '.' + e.className + ' ' + Math.round(e.getBoundingClientRect().right)).join(', ') }; })()`);
   if (!r.fits || r.over) throw new Error('mise en page : ' + JSON.stringify(r));
-  return 'pptx vérifié et écrit (' + names.length + ' fichiers, ' + Math.round(u.length / 1024) + ' Ko), scène de ' + r.w + ' px';
+  // la vue présentateur : notes, diapo suivante, chrono, laser ; elle reste ouverte pour la capture
+  const pv = await pj(`(() => { const v = document.querySelector('.ofApp'), sl0 = v.__present; const k = [...document.querySelectorAll('.slThumbs *')].length;
+    const P = v.__present(0, true); const ok = P.pres && document.querySelector('.slShow.pres .slPresSide') && getComputedStyle(document.querySelector('.slPresSide')).display === 'flex';
+    const n0 = P.notes.textContent, nx = P.next.children.length, clk = /⏱ 00:0\\d/.test(P.clock.textContent);
+    P.key('l'); const las = getComputedStyle(document.querySelector('.slLaser')).display; P.key('p'); const off = P.pres; P.key('p');
+    return {ok: !!ok, n0, nx, clk, las, off}; })()`);
+  if (!pv.ok || !pv.clk || pv.las === 'none' || pv.off || !pv.nx || !pv.n0) throw new Error('vue présentateur : ' + JSON.stringify(pv));
+  await sleep(300);
+  return 'vue présentateur ok (' + pv.n0.slice(0, 30) + ') · pptx vérifié et écrit (' + names.length + ' fichiers, ' + Math.round(u.length / 1024) + ' Ko), scène de ' + r.w + ' px';
 };

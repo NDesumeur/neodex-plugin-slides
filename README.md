@@ -4,6 +4,10 @@ Un logiciel de présentation : des diapositives avec textes, images et formes à
 
 *English version: [README.en.md](README.en.md)*
 
+## Vue présentateur (nouveau en 1.4.0)
+
+Vue présentateur (P ou ▶ Présenter) : diapo en cours, la suivante, notes en grand, chronomètre et heure ; pointeur laser (L).
+
 ## Tes présentations
 
 - **+ Nouveau** crée une présentation, enregistrée toute seule à chaque modification.
@@ -41,6 +45,8 @@ Dix thèmes de couleurs et de polices : Néon, Blanc, Nuit, Aube, Océan, Forêt
 - un clic sur le quart gauche de l'écran revient en arrière ;
 - précédente : **←**, **↑**, **Page précédente** ou **Retour arrière** ;
 - **Début** et **Fin** : première et dernière diapositive ;
+- **P** : la **vue présentateur** (aussi dans ▶ Présenter) : la diapositive en cours, la suivante, tes notes en grand, le chronomètre et l’heure. **R** remet le chrono à zéro.
+- **L** : le **pointeur laser**, un point rouge qui suit la souris.
 - **Échap** : quitter.
 
 ## Exporter
